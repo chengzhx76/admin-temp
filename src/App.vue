@@ -5,22 +5,9 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      theme: this.$store.state.app.themeColor
-    };
-  },
-  mounted () {
-
-  },
-  beforeDestroy () {
-
-  },
-  methods: {
-
+  export default{
+    name: 'APP'
   }
-}
 </script>
 
 <style>
