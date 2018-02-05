@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import sidebarMenu from './components/sidebarMenu.vue';
-import sidebarMenuShrink from './components/sidebarMenuShrink.vue';
+import sidebarMenu from './components/sidebarMenu';
+import sidebarMenuShrink from './components/sidebarMenuShrink';
 import util from '@/utils/util';
 export default {
     name: 'shrinkableMenu',

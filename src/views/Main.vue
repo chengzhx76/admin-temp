@@ -6,7 +6,7 @@
 
     <!-- 侧边栏 -->
     <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
-      <shrinkable-menu
+      <menu-bar
         :shrink="shrink"
         @on-change="handleSubmenuChange"
         :theme="menuTheme"
@@ -17,7 +17,7 @@
           <img v-show="!shrink" src="../images/logo.jpg" key="max-logo"/>
           <img v-show="shrink" src="../images/logo-min.jpg" key="min-logo"/>
         </div>
-      </shrinkable-menu>
+      </menu-bar>
     </div>
 
     <!-- 头信息 -->
@@ -89,19 +89,19 @@
   </div>
 </template>
 <script>
-  import shrinkableMenu from './main-components/shrinkable-menu/shrinkable-menu.vue';
-  //    import tagsPageOpened from './main-components/tags-page-opened.vue';
-  import breadcrumbNav from './main-components/breadcrumb-nav.vue';
-  import fullScreen from './main-components/fullscreen.vue';
-  import lockScreen from './main-components/lockscreen/lockscreen.vue';
-  import messageTip from './main-components/message-tip.vue';
-  import themeSwitch from './main-components/theme-switch/theme-switch.vue';
+  import menuBar from './main/menu/menuBar';
+  import tagsPageOpened from './main/tagsPageOpened';
+  import breadcrumbNav from './main/breadcrumbNav';
+  import fullScreen from './main/fullscreen';
+  import lockScreen from './main/lockscreen/lockscreen';
+  import messageTip from './main/messageTip';
+  import themeSwitch from './main/theme/themeSwitch';
   import Cookies from 'js-cookie';
   import util from '@/utils/util.js';
 
   export default {
     components: {
-      shrinkableMenu,
+      menuBar,
 //            tagsPageOpened,
       breadcrumbNav,
       fullScreen,

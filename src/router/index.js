@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
 import iView from 'iview';
+
+import {routers} from './router';
+
+import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter);
 
-import {routers} from './router';
 
 // 路由配置
 const RouterConfig = {

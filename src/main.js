@@ -7,6 +7,8 @@ import store from './store';
 import 'iview/dist/styles/iview.css';
 import iView from 'iview';
 
+import './mock'
+
 Vue.use(iView);
 
 Vue.config.productionTip = false;
