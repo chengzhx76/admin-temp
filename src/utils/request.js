@@ -9,10 +9,9 @@ const service = axios.create({
   timeout: 5000
 })
 
-service.interceptors.request.use(config => {
-
-  console.log('----------request/request----------');
-
+service.interceptors.request.use(
+  config => {
+    // console.log('----------request/request----------');
     if (store.getters.token) {
       config.headers['X-Token'] = getToken()
     }
@@ -20,22 +19,17 @@ service.interceptors.request.use(config => {
   }, error => {
     console.log(error)
     Promise.reject(error)
-  })
+  });
 
 service.interceptors.response.use(
   response => {
-    console.log('----------request/response----------');
-    console.log(response);
-    const res = response.data;
+    // console.log('----------request/response----------');
+    // console.log(response);
+    const res = response.data.meta;
     if (res.code !== 200) {
       Notice.error({
         title: '请求发生错误',
         desc: res.msg
-      });
-      return Promise.reject('error');
-    } else if (res.code === 401) {
-      Notice.error({
-        title: '未登录'
       });
       return Promise.reject('error');
     } else {
@@ -43,7 +37,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error)// for debug
+    console.log('err' + error)
     Notice.error({
       title: '网络请求错误'
     });

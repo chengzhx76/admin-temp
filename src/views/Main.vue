@@ -1,6 +1,3 @@
-<style lang="less">
-  @import "../styles/main.less";
-</style>
 <template>
   <div class="main" :class="{'main-hide-text': shrink}">
 
@@ -8,11 +5,8 @@
     <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
       <menu-bar
         :shrink="shrink"
-        @on-change="handleSubmenuChange"
-        :theme="menuTheme"
-        :before-push="beforePush"
-        :open-names="openedSubmenuArr"
-        :menu-list="menuList">
+        theme="dark"
+        :menu-list="menus">
         <div slot="top" class="logo-con">
           <img v-show="!shrink" src="../images/logo.jpg" key="max-logo"/>
           <img v-show="shrink" src="../images/logo-min.jpg" key="min-logo"/>
@@ -40,13 +34,9 @@
         <!-- 左侧小组件 -->
         <div class="header-avator-con">
           <!-- 全屏 -->
-          <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+          <full-screen v-model="fullScreen"></full-screen>
           <!-- 锁屏 -->
           <lock-screen></lock-screen>
-          <!-- 消息 -->
-          <message-tip v-model="mesCount"></message-tip>
-          <!-- 皮肤切换 -->
-          <theme-switch></theme-switch>
 
           <!-- 用户 -->
           <div class="user-dropdown-menu-con">
@@ -55,17 +45,16 @@
               <!-- 下拉 -->
               <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
                 <a href="javascript:void(0)">
-                  <span class="main-user-name">{{ userName }}</span>
+                  <span class="main-user-name">{{ name }}</span>
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="ownSpace">个人中心</DropdownItem>
-                  <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+                  <DropdownItem name="logOut" divided>退出登录</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-
               <!-- 头像 -->
-              <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+              <Avatar :src="avatar" style="background: #619fe7;margin-left: 10px;"></Avatar>
             </Row>
           </div>
 
@@ -80,145 +69,75 @@
     <!-- 主内容 -->
     <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
       <div class="single-page">
-        <keep-alive :include="cachePage">
-          <router-view></router-view>
-        </keep-alive>
+        <router-view></router-view>
       </div>
     </div>
 
   </div>
 </template>
 <script>
-  import menuBar from './main/menu/menuBar';
-  import tagsPageOpened from './main/tagsPageOpened';
-  import breadcrumbNav from './main/breadcrumbNav';
+
+  import {mapGetters} from 'vuex'
+
+  import menuBar from './main/menu';
+  import tagsPageOpened from './main/tags';
+  import breadcrumbNav from './main/breadcrumb';
+
   import fullScreen from './main/fullscreen';
-  import lockScreen from './main/lockscreen/lockscreen';
-  import messageTip from './main/messageTip';
-  import themeSwitch from './main/theme/themeSwitch';
-  import Cookies from 'js-cookie';
-  import util from '@/utils/util.js';
+  import lockScreen from './main/lockscreen';
 
   export default {
     components: {
       menuBar,
-//            tagsPageOpened,
       breadcrumbNav,
       fullScreen,
-      lockScreen,
-      messageTip,
-      themeSwitch
+      lockScreen
     },
+
     data() {
       return {
         shrink: false,
-        userName: '',
-        isFullScreen: false,
-        openedSubmenuArr: this.$store.state.app.openedSubmenuArr
+        fullScreen: false,
       };
     },
+
     computed: {
-      menuList() {
-        return this.$store.state.app.menuList;
-      },
-      pageTagsList() {
-        return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
-      },
-      currentPath() {
-        return this.$store.state.app.currentPath; // 当前面包屑数组
-      },
-      avatorPath() {
-        return localStorage.avatorImgPath;
-      },
-      cachePage() {
-        return this.$store.state.app.cachePage;
-      },
-      lang() {
-        return this.$store.state.app.lang;
-      },
-      menuTheme() {
-        return this.$store.state.app.menuTheme;
-      },
-      mesCount() {
-        return this.$store.state.app.messageCount;
-      }
+      ...mapGetters([
+        'name',
+        'avatar',
+        'menus',
+        'currentPath'
+      ])
     },
+
     methods: {
-      init() {
-//                let pathArr = util.setCurrentPath(this, this.$route.name);
-        this.$store.commit('updateMenulist');
-//                if (pathArr.length >= 2) {
-//                    this.$store.commit('addOpenSubmenu', pathArr[1].name);
-//                }
-        this.userName = Cookies.get('user');
-        let messageCount = 3;
-        this.messageCount = messageCount.toString();
-        this.checkTag(this.$route.name);
-        this.$store.commit('setMessageCount', 3);
-      },
       toggleClick() {
         this.shrink = !this.shrink;
       },
+
       handleClickUserDropdown(name) {
-        if (name === 'ownSpace') {
-          util.openNewPage(this, 'ownspace_index');
-          this.$router.push({
-            name: 'ownspace_index'
+        if (name === 'logOut') {
+          this.$store.dispatch('LogOut').then(() => {
+            location.reload()// In order to re-instantiate the vue-router object to avoid bugs
           });
-        } else if (name === 'loginout') {
-          // 退出登录
-          this.$store.commit('logout', this);
-          this.$store.commit('clearOpenedSubmenu');
-          this.$router.push({
-            name: 'login'
-          });
+
+//          this.$router.push({
+//            name: 'login'
+//          });
         }
-      },
-      checkTag(name) {
-        let openpageHasTag = this.pageTagsList.some(item => {
-          if (item.name === name) {
-            return true;
-          }
-        });
-        if (!openpageHasTag) { //  解决关闭当前标签后再点击回退按钮会退到当前页时没有标签的问题
-          util.openNewPage(this, name, this.$route.params || {}, this.$route.query || {});
-        }
-      },
-      handleSubmenuChange(val) {
-        // console.log(val)
-      },
-      beforePush(name) {
-        // if (name === 'accesstest_index') {
-        //     return false;
-        // } else {
-        //     return true;
-        // }
-        return true;
-      },
-      fullscreenChange(isFullScreen) {
-        // console.log(isFullScreen);
       }
     },
+
     watch: {
       '$route'(to) {
-        this.$store.commit('setCurrentPageName', to.name);
-//                let pathArr = util.setCurrentPath(this, to.name);
-//                if (pathArr.length > 2) {
-//                    this.$store.commit('addOpenSubmenu', pathArr[1].name);
-//                }
-        this.checkTag(to.name);
-        localStorage.currentPageName = to.name;
-      },
-      lang() {
-        util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
+//        this.$store.commit('setCurrentPageName', to.name);
+//        localStorage.currentPageName = to.name;
       }
-    },
-    mounted() {
-      this.init();
-    },
-    created() {
-      // 显示打开的页面的列表
-      this.$store.commit('setOpenedList');
     }
+
   };
 </script>
+
+<style lang="less">
+  @import "../styles/main.less";
+</style>

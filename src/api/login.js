@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function loginByUsername(username, password) {
 
-  console.log('--------api/login-------');
+  // console.log('--------api/login-------');
 
   const data = {
     username,

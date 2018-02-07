@@ -59,11 +59,11 @@
             this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
               this.$router.push({name: 'home_index'});
             }).catch((e) => {
-              console.log('-------------login.vue/handleSubmit----------')
+//              console.log('-------------login.vue/handleSubmit-error----------')
               console.log(e)
             })
           }
-        });
+        })
       }
     }
   };

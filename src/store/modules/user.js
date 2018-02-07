@@ -6,7 +6,7 @@ const user = {
     username: '',
     name: '',
     avatar: '',
-    token: '',
+    token: getToken(),
     roles: []
   },
   mutations: {
@@ -30,26 +30,61 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
-
-      console.log('--------store/user-------');
-      console.log(userInfo);
-
-      console.log(userInfo.username);
-
       const username = userInfo.username.trim();
-      console.log(`--------store/user/loginByUsername-------${username}`);
       return new Promise((resolve, reject) => {
-        console.log('--------store/user/loginByUsername-------');
         loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+          const data = response.data;
+          commit('SET_TOKEN', data.token);
+          setToken(response.data.token);
           resolve()
         }).catch(error => {
           reject(error)
         })
       })
     },
+
+    // 获取用户信息
+    GetUserInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getUserInfo(state.token).then(response => {
+          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+            reject('error');
+          }
+          const data = response.data;
+          commit('SET_ROLES', data.roles);
+          commit('SET_NAME', data.name);
+          commit('SET_AVATAR', data.avatar);
+          commit('SET_USERNAME', data.username);
+          resolve(response);
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // 登出
+    LogOut({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        logout(state.token).then(() => {
+          commit('SET_TOKEN', '');
+          commit('SET_ROLES', []);
+          removeToken()
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // 前端 登出
+    FedLogOut({ commit }) {
+      return new Promise(resolve => {
+        commit('SET_TOKEN', '');
+        removeToken();
+        resolve()
+      })
+    }
+
   }
 
 };

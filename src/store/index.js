@@ -4,22 +4,16 @@ import Vuex from 'vuex';
 import app from './modules/app';
 import user from './modules/user';
 
+import getters from './getters';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    state: {
-        //
-    },
-    mutations: {
-        //
-    },
-    actions: {
-
-    },
-    modules: {
-        app,
-        user
-    }
+  modules: {
+    app,
+    user
+  },
+  getters
 });
 
 export default store;
