@@ -6,6 +6,7 @@ import { LoadingBar, Notice } from 'iview';
 import {routers} from './router';
 
 import { getToken } from '@/utils/auth'
+import Util from '@/utils/util';
 
 Vue.use(VueRouter);
 
@@ -32,29 +33,35 @@ function hasPermission(roles, route) {
   }
 }
 
+/**
+ * 当前页面是否已打开
+ * @param name
+ * @returns {boolean}
+ */
+function isOpenViews(name) {
+  let visitedViews = store.getters.visitedViews;
+  let visitedRouterName = [];
+  visitedViews.forEach(item => {
+    visitedRouterName.push(item.name);
+  });
+  return (visitedRouterName.indexOf(name) > -1);
+}
 
 const whiteList = ['login'];
 
 router.beforeEach((to, from, next) => {
   LoadingBar.start();
   if (getToken()) {
-
-    console.log(`getToken() --> ${getToken()}`);
-    console.log(`getToken() --> ${to.name}`);
-
     if (to.name === 'login') {
       next({
         replace: true,
         name: 'home_index'
       });
     } else {
-      console.log(`store.getters.roles.length-->${store.getters.roles.length}`);
       if (store.getters.roles.length === 0) {
         store.dispatch('GetUserInfo').then(res => {
           const roles = res.data.roles;
-          console.log('---router/index---');
-          console.log(res);
-          store.dispatch('GenerateRoutes', { roles }).then(() => {
+          store.dispatch('generateRoutes', { roles }).then(() => {
             router.addRoutes(store.getters.appRouters);
             next({ ...to, replace: true })
           })
@@ -76,10 +83,8 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (whiteList.indexOf(to.name) !== -1) {
-      console.log("---whiteList---");
       next()
     } else {
-      console.log("---login---");
       next({
         replace: true,
         name: 'login'
@@ -90,9 +95,13 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to) => {
+  let currentRouterName = to.name;
+  if (!isOpenViews(currentRouterName)) {
+    store.dispatch('addVisitedViews', to);
+  }
+
   LoadingBar.finish();
   window.scrollTo(0, 0);
-  // console.log("----end----")
 });
 
 

@@ -8,6 +8,7 @@ const getters = {
   routers: state => state.app.routers,
   appRouters: state => state.app.addAppRouters,
   currentPath: state => state.app.currentPath,
+  visitedViews: state => state.app.visitedViews,
 }
 
 export default getters;

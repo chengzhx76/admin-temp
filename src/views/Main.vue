@@ -62,7 +62,7 @@
       </div>
       <!-- 打开菜单导航栏 -->
       <div class="tags-con">
-        <!--<tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>-->
+        <visited-view :visitedViews="visitedViews"></visited-view>
       </div>
     </div>
 
@@ -80,7 +80,7 @@
   import {mapGetters} from 'vuex'
 
   import menuBar from './main/menu';
-  import tagsPageOpened from './main/tags';
+  import visitedView from './main/tags';
   import breadcrumbNav from './main/breadcrumb';
 
   import fullScreen from './main/fullscreen';
@@ -89,6 +89,7 @@
   export default {
     components: {
       menuBar,
+      visitedView,
       breadcrumbNav,
       fullScreen,
       lockScreen
@@ -106,7 +107,8 @@
         'name',
         'avatar',
         'menus',
-        'currentPath'
+        'currentPath',
+        'visitedViews',
       ])
     },
 
@@ -118,12 +120,8 @@
       handleClickUserDropdown(name) {
         if (name === 'logOut') {
           this.$store.dispatch('LogOut').then(() => {
-            location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+            location.reload();
           });
-
-//          this.$router.push({
-//            name: 'login'
-//          });
         }
       }
     },

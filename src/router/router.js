@@ -1,4 +1,4 @@
-import Main from '@/views/Main.vue';
+import Main from '@/views/Main';
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
@@ -7,13 +7,13 @@ export const loginRouter = {
   meta: {
     title: 'Login - 登录'
   },
-  component: () => import('@/views/login.vue')
+  component: () => import('@/views/login')
 };
 
 export const locking = {
   path: '/locking',
   name: 'locking',
-  component: () => import('@/views/main/lockscreen/components/lockingPage.vue')
+  component: () => import('@/views/main/lockscreen/components/lockingPage')
 };
 
 // -----------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ export const otherRouter = {
       path: 'home',
       title: '测试页',
       name: 'home_index',
-      component: () => import('@/components/Hello.vue')
+      component: () => import('@/components/Hello')
     },
     // { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
     // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
@@ -42,29 +42,29 @@ export const otherRouter = {
 export const appRouter = [
   {
     path: '/user',
-    icon: 'android-contacts',
-    title: '用户列表',
     name: 'user',
     component: Main,
     meta: {
+      title: '用户列表',
+      icon: 'android-contacts',
       roles: ['admin']
     },
     children: [
       {
         path: 'add',
-        title: '添加用户',
         name: 'user_add',
-        component: () => import('@/views/errorPage/errorPage'),
+        component: () => import('@/components/user'),
         meta: {
+          title: '添加用户',
           roles: ['admin']
         }
       },
       {
         path: 'list',
-        title: '用户列表',
         name: 'user_list',
-        component: () => import('@/views/errorPage/errorPage'),
+        component: () => import('@/components/list'),
         meta: {
+          title: '用户列表',
           roles: ['admin']
         }
       }
@@ -72,20 +72,20 @@ export const appRouter = [
   },
   {
     path: '/error-page',
-    icon: 'android-sad',
-    title: '错误页面',
     name: 'errorpage',
     component: Main,
     meta: {
+      title: '错误页面',
+      icon: 'android-sad',
       roles: ['admin']
     },
     children: [
       {
         path: 'index',
-        title: '错误页面',
         name: 'errorpage_index',
         component: () => import('@/views/errorPage/errorPage'),
         meta: {
+          title: '错误页面',
           roles: ['admin']
         }
       }
@@ -100,7 +100,7 @@ export const page404 = {
   meta: {
     title: '404-页面不存在'
   },
-  component: () => import('@/views/errorPage/404.vue')
+  component: () => import('@/views/errorPage/404')
 };
 
 export const page403 = {
@@ -109,7 +109,7 @@ export const page403 = {
   meta: {
     title: '403-权限不足'
   },
-  component: () => import('@/views/errorPage/403.vue')
+  component: () => import('@/views/errorPage/403')
 };
 
 export const page500 = {
@@ -118,7 +118,7 @@ export const page500 = {
   meta: {
     title: '500-服务端错误'
   },
-  component: () => import('@/views/errorPage/500.vue')
+  component: () => import('@/views/errorPage/500')
 };
 
 // 所有上面定义的路由都要写在下面的routers里

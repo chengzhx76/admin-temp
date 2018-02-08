@@ -3,19 +3,19 @@
         @on-select="changeMenu">
     <template v-for="item in menuList">
       <MenuItem v-if="item.children.length<=1" :name="item.children[0].name" :key="'menuitem' + item.name">
-        <Icon :type="item.children[0].icon || item.icon" :size="iconSize" :key="'menuicon' + item.name"></Icon>
-        <span class="layout-text" :key="'title' + item.name">{{ item.children[0].title }}</span>
+        <Icon :type="item.children[0].meta.icon || item.meta.icon" :size="iconSize" :key="'menuicon' + item.name"></Icon>
+        <span class="layout-text" :key="'title' + item.name">{{ item.children[0].meta.title }}</span>
       </MenuItem>
 
       <Submenu v-if="item.children.length > 1" :name="item.name" :key="item.name">
         <template slot="title">
-          <Icon :type="item.icon" :size="iconSize"></Icon>
-          <span class="layout-text">{{ item.title }}</span>
+          <Icon :type="item.meta.icon" :size="iconSize"></Icon>
+          <span class="layout-text">{{ item.meta.title }}</span>
         </template>
         <template v-for="child in item.children">
           <MenuItem :name="child.name" :key="'menuitem' + child.name">
-            <Icon :type="child.icon" :size="iconSize" :key="'icon' + child.name"></Icon>
-            <span class="layout-text" :key="'title' + child.name">{{ child.title }}</span>
+            <Icon :type="child.meta.icon" :size="iconSize" :key="'icon' + child.name"></Icon>
+            <span class="layout-text" :key="'title' + child.name">{{ child.meta.title }}</span>
           </MenuItem>
         </template>
       </Submenu>

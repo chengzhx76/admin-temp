@@ -40,7 +40,13 @@ const app = {
         name: 'home_index'
       }
     ],
-
+    visitedViews: [{
+      path: '',
+      name: 'home_index',
+      meta: {
+        title: '首页'
+      }
+    }],
     menus: [],
     addAppRouters: [],
     routers: routers
@@ -48,18 +54,53 @@ const app = {
   mutations: {
     SET_ROUTERS: (state, accessedRouters) => {
       state.addAppRouters = accessedRouters;
-      console.log(accessedRouters);
       state.routers = routers.concat(accessedRouters);
     },
     SET_MENUS: (state, accessedRouters) => {
       state.menus = accessedRouters;
     },
+
+    // 面包屑
     SET_CURRENT_PATH: (state, currentPath) => {
       state.currentPath = currentPath;
     },
+
+    // 标签
+    ADD_VISITED_VIEWS (state, view) {
+      state.visitedViews.push(view);
+    },
+
+    DEL_VISITED_VIEW (state, name) {
+      state.visitedViews.map((item, index) => {
+        if (item.name === name) {
+          state.visitedViews.splice(index, 1);
+        }
+      });
+    },
+
+    DEL_VISITED_VIEWS (state) {
+      state.visitedViews.splice(1);
+    },
+
+    DEL_OTHER_VISITED_VIEWS (state, currentName) {
+      let currentIndex = 0;
+      state.visitedViews.forEach((item, index) => {
+        if (item.name === currentName) {
+          currentIndex = index;
+        }
+      });
+      if (currentIndex === 0) {
+        state.visitedViews.splice(1);
+      } else {
+        state.visitedViews.splice(currentIndex + 1);
+        state.visitedViews.splice(1, currentIndex - 1);
+      }
+    }
+
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+
+    generateRoutes({ commit }, data) {
       return new Promise(resolve => {
         const { roles } = data;
         let accessedRouters;
@@ -72,7 +113,30 @@ const app = {
         commit('SET_MENUS', accessedRouters);
         resolve();
       })
-    }
+    },
+
+    // 标签
+    addVisitedViews({ commit }, view) {
+      commit('ADD_VISITED_VIEWS', view)
+    },
+
+    delVisitedView({ commit }, view) {
+      commit('DEL_VISITED_VIEW', view)
+    },
+
+    delVisitedViews ({ commit }) {
+      return new Promise(resolve => {
+        commit('DEL_VISITED_VIEWS');
+        resolve();
+      })
+    },
+
+    delOtherVisitedViews ({ commit }) {
+      return new Promise(resolve => {
+        commit('DEL_OTHER_VISITED_VIEWS');
+        resolve();
+      })
+    },
   }
 };
 
