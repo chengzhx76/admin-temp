@@ -33,20 +33,15 @@ function filterAppRouter(appRouterMap, roles) {
 
 const app = {
   state: {
-    currentPath: [
+    visitedViews: [
       {
-        title: '首页',
         path: '',
-        name: 'home_index'
+        name: 'home_index',
+        meta: {
+          title: '首页'
+        }
       }
     ],
-    visitedViews: [{
-      path: '',
-      name: 'home_index',
-      meta: {
-        title: '首页'
-      }
-    }],
     menus: [],
     addAppRouters: [],
     routers: routers
@@ -61,8 +56,8 @@ const app = {
     },
 
     // 面包屑
-    SET_CURRENT_PATH: (state, currentPath) => {
-      state.currentPath = currentPath;
+    SET_CURRENT_PATH: (state, path) => {
+      state.currentPath.push(path);
     },
 
     // 标签
@@ -136,7 +131,8 @@ const app = {
         commit('DEL_OTHER_VISITED_VIEWS');
         resolve();
       })
-    },
+    }
+
   }
 };
 

@@ -25,12 +25,6 @@
             <Icon type="navicon" size="32"></Icon>
           </Button>
         </div>
-        <!-- 面包屑导航 -->
-        <div class="header-middle-con">
-          <div class="main-breadcrumb">
-            <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-          </div>
-        </div>
         <!-- 左侧小组件 -->
         <div class="header-avator-con">
           <!-- 全屏 -->
@@ -81,7 +75,6 @@
 
   import menuBar from './main/menu';
   import visitedView from './main/tags';
-  import breadcrumbNav from './main/breadcrumb';
 
   import fullScreen from './main/fullscreen';
   import lockScreen from './main/lockscreen';
@@ -90,7 +83,6 @@
     components: {
       menuBar,
       visitedView,
-      breadcrumbNav,
       fullScreen,
       lockScreen
     },
@@ -123,13 +115,6 @@
             location.reload();
           });
         }
-      }
-    },
-
-    watch: {
-      '$route'(to) {
-//        this.$store.commit('setCurrentPageName', to.name);
-//        localStorage.currentPageName = to.name;
       }
     }
 
